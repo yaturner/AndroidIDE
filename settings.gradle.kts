@@ -137,7 +137,6 @@ include(
   ":lsp:java",
   ":lsp:xml",
   ":layouteditor:layouteditor",
-  ":layouteditor:vectormaster",
   ":subprojects:aaptcompiler",
   ":subprojects:builder-model-impl",
   ":subprojects:flashbar",
