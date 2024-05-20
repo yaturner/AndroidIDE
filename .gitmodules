@@ -1,0 +1,3 @@
+[submodule "LayoutEditor"]
+	path = LayoutEditor
+	url = https://github.com/yaturner/LayoutEditor.git
