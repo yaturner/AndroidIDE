@@ -116,7 +116,7 @@ fun Project.configureAndroidModule(
 
     configureCoreLibDesugaring(this, coreLibDesugDep)
 
-    if (":app" == project.path) {
+    if (":ide-app" == project.path) {
       packagingOptions {
         jniLibs {
           useLegacyPackaging = true
