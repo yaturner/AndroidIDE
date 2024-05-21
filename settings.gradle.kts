@@ -136,7 +136,7 @@ include(
   ":lsp:models",
   ":lsp:java",
   ":lsp:xml",
-  ":layouteditor:layouteditorroot",
+  ":layouteditor:app",
   ":layouteditor:vectormaster",
   ":subprojects:aaptcompiler",
   ":subprojects:builder-model-impl",
