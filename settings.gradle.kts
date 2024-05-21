@@ -107,7 +107,7 @@ include(
   ":annotation-processors-ksp",
   ":annotations",
   ":actions",
-  ":app",
+  ":ide-app",
   ":build-info",
   ":common",
   ":editor",
