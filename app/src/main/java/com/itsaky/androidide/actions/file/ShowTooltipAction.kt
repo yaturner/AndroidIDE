@@ -30,6 +30,7 @@ import com.itsaky.androidide.R
 import com.itsaky.androidide.actions.ActionData
 import com.itsaky.androidide.actions.ActionItem
 import com.itsaky.androidide.actions.EditorRelatedAction
+import com.itsaky.androidide.activities.editor.EditorHandlerActivity
 import com.itsaky.androidide.roomData.tooltips.Tooltip
 import io.github.rosemoe.sora.widget.CodeEditor
 
@@ -52,8 +53,9 @@ class ShowTooltipAction(private val context: Context, override val order: Int) :
             activity?.getTooltipData(word)?.let { tooltipData ->
                 showTooltip(
                     editor,
-                    tooltipData
-                ) { activity.openFAQActivity(tooltipData.descriptionFull) }
+                    tooltipData,
+                    activity
+                )
             }
         }
 
@@ -62,47 +64,45 @@ class ShowTooltipAction(private val context: Context, override val order: Int) :
 
     private fun showTooltip(
         editor: CodeEditor,
-        tooltip: Tooltip?,
-        block: () -> Unit
+        tooltip: Tooltip,
+        activity: EditorHandlerActivity,
+        block: () -> Unit = { activity.openFAQActivity(tooltip.descriptionFull) }
     ) {
-        tooltip?.let { tooltipData ->
+        val inflater = LayoutInflater.from(context)
+        val tooltipView = inflater.inflate(R.layout.layout_tooltip, null)
 
-            val inflater = LayoutInflater.from(context)
-            val tooltipView = inflater.inflate(R.layout.layout_tooltip, null)
+        val informationFirstLevel: TextView =
+            tooltipView.findViewById(R.id.tooltip_inforamtion_first_level)
+        val showMoreSecondLevelButton: Button =
+            tooltipView.findViewById(R.id.btn_show_more_second_level)
+        val showMoreThirdLevelButton: Button =
+            tooltipView.findViewById(R.id.btn_show_more_third_levewl)
+        val informationSecondLevel: TextView =
+            tooltipView.findViewById(R.id.tooltip_information_second_level)
 
-            val informationFirstLevel: TextView =
-                tooltipView.findViewById(R.id.tooltip_inforamtion_first_level)
-            val showMoreSecondLevelButton: Button =
-                tooltipView.findViewById(R.id.btn_show_more_second_level)
-            val showMoreThirdLevelButton: Button =
-                tooltipView.findViewById(R.id.btn_show_more_third_levewl)
-            val informationSecondLevel: TextView =
-                tooltipView.findViewById(R.id.tooltip_information_second_level)
+        informationFirstLevel.text = tooltip.descriptionShort
 
-            informationFirstLevel.text = tooltipData.descriptionShort
+        informationSecondLevel.text = tooltip.descriptionLong
 
-            informationSecondLevel.text = tooltipData.descriptionLong
-
-            showMoreSecondLevelButton.setOnClickListener {
-                informationSecondLevel.isVisible = true
-                showMoreThirdLevelButton.isVisible = true
-                showMoreSecondLevelButton.isVisible = false
-            }
-
-            val popupWindow = PopupWindow(
-                tooltipView,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            popupWindow.isOutsideTouchable = true
-            popupWindow.isFocusable = true
-
-            showMoreThirdLevelButton.setOnClickListener {
-                block.invoke()
-                popupWindow.dismiss()
-            }
-
-            popupWindow.showAtLocation(editor, Gravity.CENTER, 0, 0)
+        showMoreSecondLevelButton.setOnClickListener {
+            informationSecondLevel.isVisible = true
+            showMoreThirdLevelButton.isVisible = true
+            showMoreSecondLevelButton.isVisible = false
         }
+
+        val popupWindow = PopupWindow(
+            tooltipView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        popupWindow.isOutsideTouchable = true
+        popupWindow.isFocusable = true
+
+        showMoreThirdLevelButton.setOnClickListener {
+            block.invoke()
+            popupWindow.dismiss()
+        }
+
+        popupWindow.showAtLocation(editor, Gravity.CENTER, 0, 0)
     }
 }
